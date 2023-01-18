@@ -16,7 +16,13 @@ class StatBoost {
         const percentNumStr = value.substring(0, value.length - 1);
         if (isNaN(percentNumStr))
           throw new TypeError("'value' is not a valid percentile number.");
-        __value = parseInt(percentNumStr) / 100;
+
+        // Maybe I should just use parseFloat only?
+        __value =
+          (percentNumStr.includes(".")
+            ? parseFloat(percentNumStr)
+            : parseInt(percentNumStr)) / 100;
+
         if (t_1 !== "boolean") isPercent = true;
       } else if (isNaN(percentNumStr)) {
         throw new TypeError("'value' is not a valid number.");
@@ -78,14 +84,13 @@ class StatBoost {
 
   /**
    * Calculate the total percentile value of all the boosts.
-   * @param  {...any} boosts One or an array of {@link StatBoost}.
+   * @param  {...any} boosts An array which element can be either {@link StatBoost}, a percentile string or a numberic value.
    * @returns {StatBoost} A {@link StatBoost} instance which has value of the total.
    */
   static calcTotalPercent(...boosts) {
     if (!boosts || boosts.length === 0) return 0;
     if (boosts.length === 1 && boosts[0].isenabled) return boosts[0].value;
 
-    let stillPercent;
     let total = 0;
     for (let boost of boosts) {
       const t_boost = typeof boost;
@@ -96,21 +101,18 @@ class StatBoost {
       }
 
       if (boost instanceof StatBoost) {
-        if (boost.isenabled) {
+        if (boost.isenabled && boost.ispercent) {
           if (total === 0) {
-            total = boost.value;
-            stillPercent = boost.ispercent;
+            total = 1 + boost.value;
           } else {
-            if (boost.ispercent) {
-              total = (total + 1) * (boost.value + 1) - 1;
-            } else {
-              total = total * boost.value;
-              stillPercent = false;
-            }
+            total = total * (1 + boost.value);
           }
         }
       }
     }
-    return new StatBoost(total, stillPercent);
+
+    if (total !== 0) total -= 1;
+
+    return new StatBoost(total, true);
   }
 }
