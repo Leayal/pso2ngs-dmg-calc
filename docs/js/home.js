@@ -1,0 +1,2 @@
+(function(c){var d=c.jQuery;d(function(a){var b=c.document;a(b);a(b.body);DarkReader.setFetchMethod(window.fetch);DarkReader.auto();b=StatBoost.calcTotalPercent(new StatBoost("4%"),new StatBoost("3%"),new StatBoost("3%"),new StatBoost("3%"),new StatBoost("3%")).toString(2);var e=StatBoost.calcTotalPercent(new StatBoost("4%"),new StatBoost("2.5%"),new StatBoost("3%"),new StatBoost("3%"),new StatBoost("2.5%"),new StatBoost("3%")).toString(2);a("#total01").text("Total: "+b);a("#total02").text("Total: "+
+e)})})(this);
