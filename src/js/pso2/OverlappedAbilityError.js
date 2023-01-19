@@ -4,9 +4,7 @@
 class OverlappedAbilityError extends Error {
   /**
    * Creates a new instance of {@link OverlappedAbilityError}.
-   * @param {string} message The error message.
    * @param {SpecialAbility} ability The {@link SpecialAbility} which is overlapped.
-   * @constructor
    */
   constructor(ability) {
     super(`Ability '${ability.name}' is overlapped.`);
@@ -17,5 +15,12 @@ class OverlappedAbilityError extends Error {
       value: ability,
       writable: false,
     });
+  }
+
+  /**
+   * @returns {SpecialAbility} The special ability which caused the overlap.
+   */
+  get ability() {
+    return this.ability;
   }
 }

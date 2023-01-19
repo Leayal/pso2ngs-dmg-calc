@@ -4,7 +4,6 @@
 class DmgCalc {
   /**
    * Creates a new instance of the heart.
-   * @constructor
    */
   constructor() {
     let _dmgstat = 0,
@@ -39,7 +38,8 @@ class DmgCalc {
 
           _dmgstat = value;
           if (_calcOnValueChanges) {
-            // call calc()
+            this.calcMin();
+            this.calcMax();
           }
         },
       },

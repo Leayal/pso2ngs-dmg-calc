@@ -7,7 +7,6 @@ class SpecialAbility {
    * @param {string} name The name of this special ability.
    * @param {number} category The numeric ID of the category of this special ability.
    * @param {Array<StatBoost>} boosts An array which contains stat boosts information.
-   * @constructor
    */
   constructor(name, category, boosts) {
     Object.defineProperties(this, {
@@ -30,5 +29,26 @@ class SpecialAbility {
         writable: false,
       },
     });
+  }
+
+  /**
+   * @returns {number} The numeric ID of the category of this special ability.
+   */
+  get category() {
+    return this.category;
+  }
+
+  /**
+   * @returns {Array<StatBoost>} Returns an array of {@link StatBoost}.
+   */
+  get boosts() {
+    return this.boosts;
+  }
+
+  /**
+   * @returns {string} Returns name of this special ability instance.
+   */
+  get name() {
+    return this.name;
   }
 }

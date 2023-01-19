@@ -4,7 +4,6 @@
 class Equipment {
   /**
    * Creates a new {@link Equipment} instance.
-   * @constructor
    */
   constructor() {
     let _affixes = {};
