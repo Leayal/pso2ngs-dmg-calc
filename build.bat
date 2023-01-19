@@ -59,6 +59,7 @@ IF "%JAVA_EXE%"=="" (
 ) ELSE (
  REM Building the scripts into a script, or multiple scripts.
 
+ @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "tools\closure-compiler-v20230103.jar" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --js "src/js/js-extend.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/js-extend.js"
  @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "tools\closure-compiler-v20230103.jar" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --js "src/js/home.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/home.js"
  @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "tools\closure-compiler-v20230103.jar" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --js "src/js/pso2/**.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/lea.pso2dmgcalc.js"
 

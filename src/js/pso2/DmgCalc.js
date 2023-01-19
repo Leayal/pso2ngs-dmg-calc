@@ -1,4 +1,11 @@
+/**
+ * Core, heart of this whole app.
+ */
 class DmgCalc {
+  /**
+   * Creates a new instance of the heart.
+   * @constructor
+   */
   constructor() {
     let _dmgstat = 0,
       _calcOnValueChanges = true;

@@ -16,18 +16,19 @@
       new StatBoost("3%"),
       new StatBoost("3%"),
       new StatBoost("3%"),
+      new StatBoost("2.5%"),
       new StatBoost("3%")
-    ).toString(2);
+    ).toString(3);
 
     // Test string values as the input.
     const test2 = StatBoost.calcTotalPercent(
-      "4%",
-      "3%",
-      "3%",
-      "3%",
+      "-5%",
       "2.5%",
-      "2.5%"
+      "-1.5%",
+      "-2%"
     ).toString(3);
+
+    // console.log(new SpecialAbility("Ability IV", 0));
 
     $("#total01").text("Total: " + test1);
     $("#total02").text("Total: " + test2);

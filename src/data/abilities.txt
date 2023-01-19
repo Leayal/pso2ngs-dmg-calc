@@ -1,0 +1,3 @@
+ability
+gigan-power
+gigan-shoot

@@ -1,0 +1,1 @@
+void function(b){"function"!==typeof b.removeItem&&(b.removeItem=function(a){a=this.indexOf(a);-1!==a&&a.splice(a,1)});"function"!==typeof b.removeAllItems&&(b.removeAllItems=function(a){for(var c=this.length;c--;)this[c]===a&&this.splice(c,1)})}(Array.prototype);

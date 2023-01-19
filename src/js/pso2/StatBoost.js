@@ -1,10 +1,14 @@
+/**
+ * Represents a stat modifier (stat boost) in PSO2 NGS game.
+ */
 class StatBoost {
   /**
    * Create a new {@link StatBoost} instance.
    * @param {number} value The numeric value.
-   * @param {boolean=} isPercent [Optional] Whether the boost is a percentile or a flat value. If omitted, will be true.
+   * @param {boolean=} isPercent [Optional] Whether the boost is a percentile or a flat value. If omitted, will be undefined, which depends on the 'value' param.
+   * @param {number=} statId [Optional] The numeric ID of a stat. If ommitted, will be 0.
    */
-  constructor(value, isPercent) {
+  constructor(value, isPercent, statId = 0) {
     const t_0 = typeof value,
       t_1 = typeof isPercent;
     let __value = 0;
@@ -17,12 +21,7 @@ class StatBoost {
         if (isNaN(percentNumStr))
           throw new TypeError("'value' is not a valid percentile number.");
 
-        // Maybe I should just use parseFloat only?
-        __value =
-          (percentNumStr.includes(".")
-            ? parseFloat(percentNumStr)
-            : parseInt(percentNumStr)) / 100;
-
+        __value = parseFloat(percentNumStr) / 100;
         if (t_1 !== "boolean") isPercent = true;
       } else if (isNaN(percentNumStr)) {
         throw new TypeError("'value' is not a valid number.");
@@ -32,13 +31,21 @@ class StatBoost {
     } else if (t_0 === "number") {
       __value = value;
     } else {
-      throw new TypeError("'value' is not a valid.");
+      throw new TypeError(
+        `'value' is not valid. 'value' is a ${t_0}, and is '${value}'.`
+      );
     }
 
     if (t_1 === "undefined") isPercent = true;
-    else if (t_1 !== "boolean") isPercent = !!!isPercent;
+    else if (t_1 !== "boolean") isPercent = !!isPercent;
 
     Object.defineProperties(this, {
+      statId: {
+        configurable: false,
+        writable: false,
+        value: statId,
+        enumerable: true,
+      },
       value: {
         configurable: false,
         writable: false,
@@ -61,8 +68,8 @@ class StatBoost {
   }
 
   /**
-   * Get a string represent the amount of stat boost of this instance.
-   * @param {number} fraction If omitted, the value will be rounded down.
+   * Get a string represent the amount of stat boost of this instance. If the value has fraction, it will be rounded down.
+   * @param {number} fraction If omitted, will be 0, which means no fraction number.
    * @returns {string} A string represent the amount of stat boost of this instance.
    */
   toString(fraction) {
@@ -84,34 +91,42 @@ class StatBoost {
 
   /**
    * Calculate the total percentile value of all the boosts.
-   * @param  {...any} boosts An array which element can be either {@link StatBoost}, a percentile string or a numberic value.
+   * @param  {...StatBoost} boosts An array which element can be either {@link StatBoost}, a percentile string or a numeric value.
    * @returns {StatBoost} A {@link StatBoost} instance which has value of the total.
    */
   static calcTotalPercent(...boosts) {
     if (!boosts || boosts.length === 0) return 0;
-    if (boosts.length === 1 && boosts[0].isenabled) return boosts[0].value;
+    if (boosts.length === 1)
+      return boosts[0] instanceof StatBoost
+        ? boosts[0]
+        : new StatBoost(boosts[0]);
 
     let total = 0;
     for (let boost of boosts) {
       const t_boost = typeof boost;
       if (t_boost === "string") boost = new StatBoost(boost);
       else if (t_boost === "number") {
-        const isPercentile = boost < 1;
-        boost = new StatBoost(boost, isPercentile);
+        boost = new StatBoost(boost, boost < 1, 0);
       }
 
       if (boost instanceof StatBoost) {
         if (boost.isenabled && boost.ispercent) {
           if (total === 0) {
-            total = 1 + boost.value;
+            total = boost.value;
           } else {
-            total = total * (1 + boost.value);
+            // I think this is what SEGA used.
+            // Offset it with 1 to define "the modifier". E.g: 2.5% = 0.025 => 1.025 is the "modifier".
+            // So we offset it +1, do math, then -1 again to get the percentile.
+            const isNegative = boost.value < 0;
+            if (isNegative) {
+              total = (1 + total) / (1 + Math.abs(boost.value)) - 1;
+            } else {
+              total = (1 + total) * (1 + boost.value) - 1;
+            }
           }
         }
       }
     }
-
-    if (total !== 0) total -= 1;
 
     return new StatBoost(total, true);
   }
