@@ -1,10 +1,8 @@
 // The Evil code
 // This is to add some more convenient shortcuts and functions.
 
-/**
- * @suppress {uselessCode}
- */
-void (function (p) {
+/** @suppress {uselessCode} */
+void ((p) => {
   if (typeof p.removeItem !== "function") {
     /**
      * Removes an item from the array. Do nothing if the array does not contain the item.

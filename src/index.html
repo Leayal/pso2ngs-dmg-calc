@@ -19,7 +19,7 @@
     <!-- Minimal security -->
     <meta
       http-equiv="content-security-policy"
-      content="default-src 'self' 'unsafe-inline' https://*.jsdelivr.net/npm/ https://unpkg.com https://*.unpkg.com;"
+      content="default-src 'self' 'unsafe-inline' https://*.jsdelivr.net/npm/ https://unpkg.com https://*.unpkg.com; img-src 'self' data:"
     />
 
     <!-- External resources -->
@@ -35,37 +35,25 @@
 
     <!-- My own resources -->
     <link rel="stylesheet" href="css/home.css" />
-    <script src="js/js-extend.js"></script>
+    <script src="js/lea.js-extended.js"></script>
     <script src="js/lea.pso2data.abilities.js"></script>
+    <script src="js/lea.pso2.ui.js"></script>
     <script src="js/lea.pso2.dmgcalc.js"></script>
+
+    <!-- App entry point -->
     <script src="js/home.js"></script>
   </head>
   <body>
-    <div class="container text-center">
-      <div class="row">
-        <div class="col">
-          <div class="container text-center">
-            <div class="row">Damage increment.</div>
-            <div class="row">Armor Param: 4%</div>
-            <div class="row">Power IV: 3%</div>
-            <div class="row">Snadael Soul IV: 3%</div>
-            <div class="row">Adi Guardadisha: 3%</div>
-            <div class="row">Alz Secrete IV: 2.5%</div>
-            <div class="row">Stira Domnia: 3%</div>
-            <div class="row" id="total01">Total:</div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="container text-center">
-            <div class="row">Dmg Resist.</div>
-            <div class="row">Gigantix Unit: -5%</div>
-            <div class="row">Adi Guardidasha: 2.5%</div>
-            <div class="row">Alz Secrete IV: -1.5%</div>
-            <div class="row">Stira Domina: -2.0%</div>
-            <div class="row" id="total02">Total:</div>
-          </div>
-        </div>
-      </div>
+    <div id="mainapp" class="container text-center d-none">
+      <div>aaaa</div>
     </div>
+    <noscript>
+      <div class="container text-center">
+        <p>
+          This application requires Javascript. Please enable it and reload the
+          page.
+        </p>
+      </div>
+    </noscript>
   </body>
 </html>

@@ -10,15 +10,18 @@ IF "%JAVA_HOME%"=="" (
 
 REM Closure Compiler's parameters
 
+REM Path to jar file of Google Closure Compiler
+SET "CLOSURE_JAR_PATH=tools\closure-compiler-v20230103.jar"
+
 REM Specifies the compilation level to use. Options: 
 REM Available options: BUNDLE, WHITESPACE_ONLY, SIMPLE, ADVANCED
 REM ADVANCED may cause bug or processing failures for cases which use third-party JS libraries. Default is SIMPLE.
 SET "CLOSURE_OPTIMIZATION_LEVEL=SIMPLE"
 
 REM Sets the language spec to which input sources should conform.
-REM Available options: ECMASCRIPT3, ECMASCRIPT5, ECMASCRIPT5_STRICT, ECMASCRIPT_2015, ECMASCRIPT_2016, ECMASCRIPT_2017, ECMASCRIPT_2018, ECMASCRIPT_2019, STABLE, ECMASCRIPT_NEXT.
-SET "CLOSURE_TARGET_LANG=ECMASCRIPT5"
-REM ECMASCRIPT5_STRICT should allow the script to run waaaaay back to the late era of Java, which many browsers support.
+REM Available options: ECMASCRIPT3, ECMASCRIPT5, ECMASCRIPT5_STRICT, ECMASCRIPT_2015, ECMASCRIPT_2016, ECMASCRIPT_2017, ECMASCRIPT_2018, ECMASCRIPT_2019, STABLE, ECMASCRIPT_NEXT, UNSTABLE.
+SET "CLOSURE_TARGET_LANG=ECMASCRIPT_2015"
+REM ECMASCRIPT_2016, which many browsers support.
 
 REM Determines the set of builtin externs to load.
 REM Available options: BROWSER, CUSTOM.
@@ -29,6 +32,8 @@ REM Specifies the warning level to use.
 REM Available options: QUIET, DEFAULT, VERBOSE
 REM Shouldn't be changed.
 SET "CLOSURE_WARNING_LEVEL=DEFAULT"
+
+REM DO NOT CHANGE ANYTHING BELOW
 
 @SET JAVA_EXE=""
 cd /d %~dp0
@@ -59,10 +64,11 @@ IF "%JAVA_EXE%"=="" (
 ) ELSE (
  REM Building the scripts into a script, or multiple scripts.
 
- @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "tools\closure-compiler-v20230103.jar" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --js "src/js/js-extend.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/js-extend.js"
- @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "tools\closure-compiler-v20230103.jar" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --js "src/js/home.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/home.js"
- @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "tools\closure-compiler-v20230103.jar" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --js "src/js/pso2/**.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/lea.pso2.dmgcalc.js"
- @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "tools\closure-compiler-v20230103.jar" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --js "src/data/statid.js" --js "src/data/abilities.js" --js "src/data/abilities/**.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/lea.pso2data.abilities.js"
+ @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "%CLOSURE_JAR_PATH%" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --language_in UNSTABLE --js "src/js/lea-js-extend/**.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/lea.js-extended.js"
+ @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "%CLOSURE_JAR_PATH%" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --language_in UNSTABLE --js "src/data/statid.js" --js "src/data/abilities.js" --js "src/data/abilities/**.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/lea.pso2data.abilities.js"
+ @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "%CLOSURE_JAR_PATH%" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --js "src/js/pso2/**.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/lea.pso2.dmgcalc.js"
+ @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "%CLOSURE_JAR_PATH%" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --language_in UNSTABLE --js "src/js/pso2ui/**.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/lea.pso2.ui.js"
+ @start /WAIT "Processing home.js" /B "%JAVA_EXE%" -jar "%CLOSURE_JAR_PATH%" --compilation_level %CLOSURE_OPTIMIZATION_LEVEL% --env %CLOSURE_TARGET_ENV% --warning_level %CLOSURE_WARNING_LEVEL% --js "src/js/home.js" --language_out %CLOSURE_TARGET_LANG% --js_output_file "docs/js/home.js"
 
  @echo All JS files has been processed and copied to distribution.
  @GOTO ENDING

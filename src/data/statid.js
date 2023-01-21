@@ -1,64 +1,121 @@
 /**
- * Stat ID table in PSO2 NGS game.
+ * - Stat ID table in PSO2 NGS game.
+ * - All the constant names of the stat are prefixed with "s" character (lowercase).
  */
-const tbStatId = Object.freeze({
-  None: 0,
+class StatId {
   /**
-   * Health power.
+   * @readonly No stat.
+   * @constant
    */
-  HP: 1 << 0,
+  static sNone = 0;
   /**
-   * PP.
+   * @readonly Health power.
+   * @constant
    */
-  PP: 1 << 1,
+  static sHP = 1 << 0;
   /**
-   * Strike damage.
+   * @readonly PP.
+   * @constant
    */
-  StrikeDamage: 1 << 2,
+  static sPP = 1 << 1;
   /**
-   * Shoot damage.
+   * @readonly Strike damage.
+   * @constant
    */
-  ShootDamage: 1 << 3,
+  static sStrikeDamage = 1 << 2;
   /**
-   * Tech damage.
+   * @readonly Shoot damage.
+   * @constant
    */
-  TechDamage: 1 << 4,
+  static sShootDamage = 1 << 3;
   /**
-   * Strike + Shoot + Tech damage.
+   * @readonly Tech damage.
+   * @constant
    */
-  AllDamage: StrikeDamage | ShootDamage | TechDamage,
+  static sTechDamage = 1 << 4;
   /**
-   * Strike + Shoot damage. --asha capsule usually has thing kind of thing.
+   * @readonly Strike + Shoot + Tech damage.
+   * @constant
    */
-  StrikeShootDamage: StrikeDamage | ShootDamage, // Or AllDamage & ~TechDamage.
+  static sAllDamage =
+    StatId.sStrikeDamage | StatId.sShootDamage | StatId.sTechDamage;
   /**
-   * Strike + Tech damage. --asha capsule usually has thing kind of thing.
+   * @readonly Strike + Shoot damage. --asha capsule usually has thing kind of thing.
+   * @constant
    */
-  StrikeTechDamage: StrikeDamage | TechDamage, // Or AllDamage & ~ShootDamage,
+  static sStrikeShootDamage = StatId.sStrikeDamage | StatId.sShootDamage; // Or StatId.sAllDamage & ~StatId.sTechDamage.
   /**
-   * Shoot + Tech damage. --asha capsule usually has thing kind of thing.
+   * @readonly Strike + Tech damage. --asha capsule usually has thing kind of thing.
+   * @constant
    */
-  ShootTechDamage: ShootDamage | TechDamage, // Or AllDamage & ~StrikeDamage,
+  static sStrikeTechDamage = StatId.sStrikeDamage | StatId.sTechDamage; // Or StatId.sAllDamage & ~StatId.sShootDamage;
   /**
-   * The minimum variance of damage.
+   * @readonly Shoot + Tech damage. --asha capsule usually has thing kind of thing.
+   * @constant
    */
-  DamageVariance: 1 << 5,
+  static sShootTechDamage = StatId.sShootDamage | StatId.sTechDamage; // Or StatId.sAllDamage & ~StatId.sStrikeDamage;
   /**
-   * Damage resistance (Damage reduction on receiving damage).
+   * @readonly The minimum variance of damage.
+   * @constant
    */
-  DamageResist: 1 << 6,
+  static sDamageVariance = 1 << 5;
   /**
-   * PP recovery naturally by time.
+   * @readonly Damage resistance (Damage reduction on receiving damage).
+   * @constant
    */
-  NaturalPPRecovery: 1 << 7,
+  static sDamageResist = 1 << 6;
   /**
-   * PP recovery by successfully hitting a target.
+   * @readonly PP recovery naturally by time.
+   * @constant
    */
-  PPRecoveryAttacking: 1 << 8,
-});
-Object.defineProperty(window || this, "tbStatId", {
-  configurable: false,
-  enumerable: true,
-  value: tbStatId,
-  writable: false,
-});
+  static sNaturalPPRecovery = 1 << 7;
+  /**
+   * @readonly PP recovery by successfully hitting a target.
+   * @constant
+   */
+  static sPPRecoveryAttacking = 1 << 8;
+
+  /**
+   * @private Field contains table for looking up names by value.
+   * @readonly
+   */
+  static __LookupByValue = ((o) => {
+    const tb = {};
+    for (const name of Object.keys(o))
+      if (typeof o[name] === "number") {
+        Object.defineProperty(o, name, {
+          configurable: false,
+          enumerable: true,
+          value: o[name],
+          writable: false,
+        });
+        Object.defineProperty(tb, o[name], {
+          configurable: false,
+          enumerable: true,
+          value: name,
+          writable: false,
+        });
+      }
+
+    return Object.freeze(tb);
+  })(StatId);
+
+  /**
+   * Gets the numeric ID from a stat name.
+   * @param {string} statName The name of the stat.
+   * @returns {?number} The numeric ID of the stat if the name is found. Otherwise, null.
+   */
+  static getId(statName) {
+    return StatId.hasOwnProperty(statName) ? StatId[statName] : null;
+  }
+
+  /**
+   * Gets the stat name from the numeric ID of a stat.
+   * @param {number} statId The numeric ID of the stat.
+   * @returns {?string} The name of the stat if there is one matched the ID. Otherwise, null.
+   */
+  static getName(statId) {
+    const tb = StatId.__LookupByValue;
+    return tb.hasOwnProperty(statId) ? tb[statId] : null;
+  }
+}
