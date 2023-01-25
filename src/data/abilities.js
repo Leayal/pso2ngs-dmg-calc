@@ -13,17 +13,14 @@
  *
  * @callback AbilityAddedCallback
  * @param {AbilityTable} sender The object dispatched the event.
- * @param {LeaEventCallback} eventArgs The object dispatched the event.
+ * @param {AbilityAddedEventArgs} eventArgs The object dispatched the event.
  */
 
 /**
  * Table contains special abilities.
  */
 class AbilityTable {
-  /**
-   * @readonly
-   * @type {ILeaEventHandler<AbilityAddedEventArgs>}
-   */
+  /** @readonly @type {ILeaEventHandler<AbilityAddedEventArgs>} */
   static eAbilityAdded = new LeaEventHandler(AbilityTable);
 
   /** @type {Array<SpecialAbilityData>} */
@@ -84,7 +81,11 @@ class AbilityTable {
     Object.defineProperties(AbilityTable.__abilitiesMap__, prop);
 
     if (AbilityTable.eAbilityAdded instanceof LeaEventHandler) {
-      AbilityTable.eAbilityAdded.invoke(sealedInfo);
+      AbilityTable.eAbilityAdded.invoke(
+        Object.freeze({
+          ability: sealedInfo,
+        })
+      );
     }
   }
 }

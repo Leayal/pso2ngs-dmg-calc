@@ -1,0 +1,4 @@
+.pso2-ability-list-select {
+  overflow-y: auto;
+  max-height: 60vh;
+}
